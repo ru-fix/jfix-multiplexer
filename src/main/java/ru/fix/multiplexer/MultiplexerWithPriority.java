@@ -93,11 +93,12 @@ public class MultiplexerWithPriority<MsgType, ReturnType> implements Multiplexer
         this.name = name;
         this.outputChannel = outputChannel;
         this.recommender = new StatisticStorageRecommender(multiplexerConfig.registeredMessages());
-        log.info("Multiplexer has been created. Registered types are: {}",
+        log.info("Multiplexer '{}' has been created. Registered types are: {}",
+                name,
                 Arrays.toString(multiplexerConfig.registeredMessages().entrySet().toArray())
         );
 
-        //attach profiler
+        //attach profilerMultiplexer has been created
         this.profiler = profiler;
         this.profiler.attachIndicator(name + ".buffer_size", () -> (long) countMessagesWaitingToProcessing());
 
