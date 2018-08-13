@@ -1,6 +1,7 @@
 package ru.fix.multiplexer;
 
 import lombok.extern.slf4j.Slf4j;
+import ru.fix.commons.profiler.impl.SimpleProfiler;
 import ru.fix.multiplexer.exception.MessageSendingException;
 import ru.fix.multiplexer.priority.StatisticStorageRecommender;
 import ru.fix.commons.profiler.Profiler;
@@ -53,6 +54,21 @@ public class MultiplexerWithPriority<MsgType, ReturnType> implements Multiplexer
         );
         multiplexer.start();
         return multiplexer;
+    }
+
+    public static <MsgType, ReturnType> Multiplexer<MsgType, ReturnType> createInstance(
+            final String name,
+            final MultiplexerOutputChannel<MsgType, ReturnType> outputChannel,
+            final MultiplexerConfig multiplexerConfig
+    ) {
+        return createInstance(name, outputChannel, multiplexerConfig, new SimpleProfiler());
+    }
+
+    public static <MsgType, ReturnType> Multiplexer<MsgType, ReturnType> createInstance(
+            final MultiplexerOutputChannel<MsgType, ReturnType> outputChannel,
+            final MultiplexerConfig multiplexerConfig
+    ) {
+        return createInstance("multiplexer", outputChannel, multiplexerConfig, new SimpleProfiler());
     }
 
     /**

@@ -23,12 +23,9 @@ public class MultiplexerWithPriorityTest {
     @Test(timeout = 1000)
     public void multiplexerReturnsProperResultWithSimpleOutputChannel() throws Exception {
         Multiplexer<String, String> multiplexer = MultiplexerWithPriority.createInstance(
-                "test-multiplexer",
                 OutputChannelBuilder.addWordReceived(() -> true),
-                ConfigBuilder.simpleWith100Priority(),
-                new SimpleProfiler()
+                ConfigBuilder.simpleWith100Priority()
         );
-        System.out.println("hello");
         CompletableFuture<MultiplexedMessageSendingResult<String>> promise =
                 multiplexer.send("hello", new MessageType("simple"), ExpirationDate.expiresIn(1000));
 
@@ -39,10 +36,8 @@ public class MultiplexerWithPriorityTest {
     @Test(timeout = 1000)
     public void multiplexerDoesNotProcessedExpiredMessages() throws Exception {
         Multiplexer<String, String> multiplexer = MultiplexerWithPriority.createInstance(
-                "test-multiplexer",
                 OutputChannelBuilder.addWordReceived(() -> true),
-                ConfigBuilder.simpleWith100Priority(),
-                new SimpleProfiler()
+                ConfigBuilder.simpleWith100Priority()
         );
 
         CompletableFuture<MultiplexedMessageSendingResult<String>> promiseWithExpiredTTL =
@@ -64,10 +59,8 @@ public class MultiplexerWithPriorityTest {
         Supplier<Boolean> hasFreeSlot = () -> iteration.getAndIncrement() == 0;
 
         Multiplexer<String, String> multiplexer = MultiplexerWithPriority.createInstance(
-                "test-multiplexer",
                 OutputChannelBuilder.addWordReceived(hasFreeSlot),
-                ConfigBuilder.simpleWith100Priority(),
-                new SimpleProfiler()
+                ConfigBuilder.simpleWith100Priority()
         );
 
         CompletableFuture<MultiplexedMessageSendingResult<String>> promise1 =
@@ -84,10 +77,8 @@ public class MultiplexerWithPriorityTest {
         AtomicBoolean hasFreeSlotBoolean = new AtomicBoolean(false);
 
         Multiplexer<String, String> multiplexer = MultiplexerWithPriority.createInstance(
-                "test-multiplexer",
                 OutputChannelBuilder.addWordReceived(hasFreeSlotBoolean::get),
-                ConfigBuilder.simpleWith100Priority(),
-                new SimpleProfiler()
+                ConfigBuilder.simpleWith100Priority()
         );
 
         CompletableFuture<MultiplexedMessageSendingResult<String>> promise1 =
@@ -109,10 +100,9 @@ public class MultiplexerWithPriorityTest {
         AtomicBoolean hasFreeSlotBoolean = new AtomicBoolean(false);
 
         Multiplexer<String, String> multiplexer = MultiplexerWithPriority.createInstance(
-                "test-multiplexer",
                 OutputChannelBuilder.addWordReceived(hasFreeSlotBoolean::get),
-                ConfigBuilder.simpleWith100Priority(),
-                new SimpleProfiler());
+                ConfigBuilder.simpleWith100Priority()
+        );
 
         CompletableFuture<MultiplexedMessageSendingResult<String>> promise1 =
                 multiplexer.send("Can be processed", new MessageType("simple"), ExpirationDate.expiresIn(500));
@@ -125,10 +115,8 @@ public class MultiplexerWithPriorityTest {
     @Test(expected = RuntimeException.class)
     public void multiplexerDoesNotAllowToSendUnregisteredMessage() {
         Multiplexer<String, String> multiplexer = MultiplexerWithPriority.createInstance(
-                "test-multiplexer",
                 OutputChannelBuilder.addWordReceived(() -> true),
-                ConfigBuilder.simpleWith100Priority(),
-                new SimpleProfiler()
+                ConfigBuilder.simpleWith100Priority()
         );
 
         multiplexer.send("Bad message", new MessageType("unregistered type"), ExpirationDate.expiresIn(500));
@@ -168,10 +156,8 @@ public class MultiplexerWithPriorityTest {
         };
 
         Multiplexer<String, String> multiplexer = MultiplexerWithPriority.createInstance(
-                "test-multiplexer",
                 outputChannel,
-                ConfigBuilder.highMediumTrivialPriority(),
-                new SimpleProfiler()
+                ConfigBuilder.highMediumTrivialPriority()
         );
 
         // add messages to buffer
