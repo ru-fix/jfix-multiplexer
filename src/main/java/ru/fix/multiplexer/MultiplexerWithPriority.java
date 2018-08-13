@@ -84,7 +84,9 @@ public class MultiplexerWithPriority<MsgType, ReturnType> implements Multiplexer
         Objects.requireNonNull(multiplexerConfig, "Registered messages must be presented");
 
         if (multiplexerConfig.registeredMessages().isEmpty()) {
-            throw new RuntimeException("Required at least one registered message. Now Registered messages are empty");
+            throw new IllegalArgumentException(
+                    "Required at least one registered message. Now Registered messages are empty"
+            );
         }
         this.multiplexerConfig = multiplexerConfig;
 
@@ -128,7 +130,7 @@ public class MultiplexerWithPriority<MsgType, ReturnType> implements Multiplexer
         Objects.requireNonNull(msg, "Message must be present");
         Objects.requireNonNull(messageType, "MessageType must be presented");
         if (!recommender.typeIsRegistered(messageType)) {
-            throw new RuntimeException(String.format("Sent message with type %s does not registered. " +
+            throw new IllegalArgumentException(String.format("Sent message with type %s does not registered. " +
                     "Registered types are %s", messageType, recommender));
         }
 
@@ -238,7 +240,7 @@ public class MultiplexerWithPriority<MsgType, ReturnType> implements Multiplexer
         }
 
         if (null == currentMessage) {
-            throw new RuntimeException(
+            throw new IllegalStateException(
                     String.format("Can`t find any message for polling from buffer. " +
                                     "But buffer is not empty Buffer size is %s, Buffer contains: %s. Registered types are: %s",
                             buffer.size(), buffer, recommender));

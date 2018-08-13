@@ -12,9 +12,9 @@ import java.util.Map;
 public class StatisticStorageRecommenderTest {
 
     @Test(expected = RuntimeException.class)
-    public void StaticRecommenderCantBeCreatedWithEmptyRegisterdTypes() throws Exception {
+    public void staticRecommenderCantBeCreatedWithEmptyRegisterdTypes() throws Exception {
         Map<MessageType, Integer> registeredTypes = new HashMap<>();
-        StatisticStorageRecommender ss =  new StatisticStorageRecommender(registeredTypes);
+        new StatisticStorageRecommender(registeredTypes);
     }
 
     @Test

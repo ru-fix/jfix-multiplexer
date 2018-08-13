@@ -10,13 +10,13 @@ import java.util.concurrent.CompletableFuture;
 public class BufferTest {
 
     @Test
-    public void hasMessage_ifBufferIsEmptyMustReturnsFalse() {
+    public void hasMessageIfBufferIsEmptyMustReturnsFalse() {
         Buffer<String, String> buffer = new Buffer<>("BufferTest", new SimpleProfiler());
         Assert.assertFalse(buffer.hasMessage(new MessageType("some type")));
     }
 
     @Test
-    public void hasMessage_ifBufferIsNotEmptyMustReturnsTrue() {
+    public void hasMessagefBufferIsNotEmptyMustReturnsTrue() {
         Buffer<String, String> buffer = new Buffer<>("BufferTest", new SimpleProfiler());
         MessageType msgType = new MessageType("SimpleMessage");
         buffer.add(

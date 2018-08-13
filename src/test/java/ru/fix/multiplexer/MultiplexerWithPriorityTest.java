@@ -4,7 +4,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 import ru.fix.multiplexer.util.ConfigBuilder;
 import ru.fix.multiplexer.util.OutputChannelBuilder;
-import ru.fix.commons.profiler.impl.SimpleProfiler;
 
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;

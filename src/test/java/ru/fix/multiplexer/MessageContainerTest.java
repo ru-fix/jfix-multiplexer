@@ -9,7 +9,7 @@ import java.util.concurrent.CompletableFuture;
 public class MessageContainerTest {
 
     @Test
-    public void isExpired_whenTtlIsNotExpiredReturnsFalse() {
+    public void statusisExpiredwhenTtlIsNotExpiredReturnsFalse() {
         MessageContainer<String, String> msg = new MessageContainer<>(
                 "Long msg",
                 new MessageType("some type"),
@@ -21,7 +21,7 @@ public class MessageContainerTest {
     }
 
     @Test
-    public void isExpired_whenTtlIsExpiredReturnsTrue() throws Exception {
+    public void statusisExpiredwhenTtlIsExpiredReturnsTrue() throws Exception {
         MessageContainer<String, String> msg = new MessageContainer<>(
                 "Long msg",
                 new MessageType("some type"),
@@ -34,7 +34,7 @@ public class MessageContainerTest {
     }
 
     @Test
-    public void isExpired_messageWithoutExpiredNeverExpired() throws Exception {
+    public void statusisExpiredwhenMessageWithoutExpiredNeverExpired() throws Exception {
         MessageContainer<String, String> msg = new MessageContainer<>(
                 "Long msg",
                 new MessageType("some type"),
