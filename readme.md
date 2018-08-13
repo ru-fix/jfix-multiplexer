@@ -1,40 +1,39 @@
-#Предназначение
-Предназначение Multiplexer'а - в случае ограничения ширины исходящего канала буферезировать входящие сообщения 
-из разных источнков и в порядке приоритета отсылать в обработчик.
+[![Build Status](https://travis-ci.org/ru-fix/jfix-multiplexer.svg?branch=master)](https://travis-ci.org/ru-fix/jfix-multiplexer)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/545d559a225440fd9aa6660350c5f9f3)](https://www.codacy.com/project/bukharovSI/jfix-multiplexer/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ru-fix/jfix-multiplexer&amp;utm_campaign=Badge_Grade_Dashboard)
 
-#В каких случаях применяется
-Если в преокте есть бутылочное горлышко, с ограниченным количеством одновременно обрабатываемых сообщений,
-и в пиках это количество сообщений превышается. Мультиплексер позволит буферизировать входящие сообщения
-и отправлять их по мере возможности. Так же поддерживается приоритет сообщений. Таким образом мультиплексер будет 
-стараться балансировать отправку сообщений в соотвествии с приоритетом. 
-Подробности [Wiki](https://portal.fix.ru/display/CPAPSM/Multiplexer)
+Multiplexer receives messages from plenty input channels and sends them to output channel smoothly.
 
-#Как использовать
-Прежде всего необходимо зарегистрировать все сообщения, которые будут проходить через мультиплексер.
-```
-Map<MessageType, Integer> priority = new LinkedHashMap<>();
-priority.put(new MessageType("simple"), 100);
-```
-Зарегистрирован 1 тип вообщения с приоритетом 100.
+# What for?
+If you have some narrow output channel and unstable input load and do not want to block a tread for waiting until 
+channel will be free you can use Multipexer. It stores output messages returns you a promise and process message
+as soon as possible.
 
-Далее необходимо создать исходящий канал.
+# Features
+ - allows to send messages to output channel smoothly. 
+ - can prioritize messages and send most important messages first
+ - sends messages asynchronously and does not block sending thread 
 
-```
-Function<String, CompletableFuture<String>> outputChannel =
-        (msg) -> CompletableFuture.supplyAsync(() -> msg + " received");
-```
-Исходящий канал на выходе обязан отдавать CF<T>
+# How to use
+        // just imagine we need to append strings
+        AppendedString appendedString = new AppendedString();
 
-Создаем инстанс мултиплексера
-```
-Multiplexer<String, String> multiplexer = new MultiplexerWithPriority<>(outputChannel, priority);
-```
+        // we need to register message types because multiplexer prioritize incoming messages
+        // but in this case all mesages has the same priority
+        MultiplexerConfig config = new SimpleMultiplexerConfig(Collections.singletonMap(new MessageType("txt"), 1));
 
-и теперь можно отправлять сообщения в канал через мультиплексер
+        //create multiplexer with output channel as string appender and the registered message
+        Multiplexer<String, Void> multiplexer = MultiplexerWithPriority.createInstance(appendedString, config);
 
-```
-CompletableFuture<MultiplexedMessageSendingResult<String>> promise
-   = multiplexer.send("hello", new MessageType("simple"), 100L);
-```
+        // send two massages to appender through multiplexer
+        CompletableFuture<MultiplexedMessageSendingResult<Void>> helloSent =
+                multiplexer.send("Hello ", new MessageType("txt"), ExpirationDate.expiresIn(10_000));
+        CompletableFuture<MultiplexedMessageSendingResult<Void>>
+                wordSent = multiplexer.send("word", new MessageType("txt"), ExpirationDate.expiresIn(10_000));
 
-Примеры использования можно посмотреть в unit-тестах.
+        // wait while messages are processing
+        CompletableFuture.allOf(helloSent, wordSent).join();
+
+        // messages has been sent and processed
+        Assert.assertThat(appendedString.container.toString(), Matchers.containsString("Hello"));
+        Assert.assertThat(appendedString.container.toString(), Matchers.containsString("word"));
+        System.out.println("The final string: " + appendedString.container.toString());
