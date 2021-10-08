@@ -1,5 +1,5 @@
-[![Build Status](https://travis-ci.org/ru-fix/jfix-multiplexer.svg?branch=master)](https://travis-ci.org/ru-fix/jfix-multiplexer)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/545d559a225440fd9aa6660350c5f9f3)](https://www.codacy.com/project/bukharovSI/jfix-multiplexer/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ru-fix/jfix-multiplexer&amp;utm_campaign=Badge_Grade_Dashboard)
+Project is currently not supported and archived.  
+You can find usefull tools in [jfix-stdlib](https://github.com/ru-fix/jfix-stdlib)
 
 Multiplexer receives messages from plenty input channels and sends them to output channel smoothly.
 
